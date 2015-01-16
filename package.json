@@ -10,7 +10,9 @@
     "url": "https://github.com/mikkoh"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "^3.2.0"
+  },
   "scripts": {
     "test": "node test.js"
   },
