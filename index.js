@@ -14,18 +14,26 @@ function directions() {
   this.idToState = {};
   this.road = [];
   this.durations = {};
-};
+}
 
 directions.prototype = {
 
   fromTo: function( from, to, duration ) {
 
-    var durations = this.durations[ from ] || ( this.durations[ from ] = {} );
-    durations[ to ] = duration;
+    if( duration !== undefined ) {
 
-    this.road.push( [ this.getId( from ),
-                      this.getId( to ), 
-                      duration ] );
+      var durations = this.durations[ from ] || ( this.durations[ from ] = {} );
+      durations[ to ] = duration;
+
+      this.road.push( [ this.getId( from ),
+                        this.getId( to ), 
+                        duration ] );
+    } else {
+
+      duration = this.durations[ from ] && this.durations[ from ][ to ];
+    }
+
+    return duration;
   },
 
   getPath: function( from, to ) {
@@ -54,11 +62,6 @@ directions.prototype = {
       cost: cost,
       path: path
     };
-  },
-
-  getDuration: function( from, to ) {
-
-    return this.durations[ from ] && this.durations[ from ][ to ];
   },
 
   getId: function( state ) {
