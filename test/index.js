@@ -16,5 +16,5 @@ tape( 'get path', function( t ) {
 
   t.equal( JSON.stringify( [ 'alpha', 'idle', 'omega' ] ), JSON.stringify( data.path ), 'path was correct' );
   t.equal( 2.7, data.cost, 'path cost was correct' );
-  t.equal( 1.2, someDirections.getDuration( 'alpha', 'idle' ), 'individual duration was correct' );
+  t.equal( 1.2, someDirections.fromTo( 'alpha', 'idle' ), 'individual duration was correct' );
 });
