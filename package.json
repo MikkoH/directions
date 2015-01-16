@@ -1,0 +1,28 @@
+{
+  "name": "directions",
+  "version": "1.0.0",
+  "description": "Add in locations by name and lengths/durations to those locations after which you can ask for directions ",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Mikko Haapoja",
+    "email": "me@mikkoh.com",
+    "url": "https://github.com/mikkoh"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "path,shortest,location,dijkstra,map,graph"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mikkoh/directions.git"
+  },
+  "homepage": "https://github.com/mikkoh/directions",
+  "bugs": {
+    "url": "https://github.com/mikkoh/directions/issues"
+  }
+}
