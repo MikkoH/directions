@@ -36,31 +36,37 @@ directions.prototype = {
     return duration;
   },
 
-  getPath: function( from, to ) {
+  getPath: function() {
 
-    if( this.states[ from ] === undefined ) {
+    var totalCost = 0, 
+        totalPath = [], 
+        from, to, calcs, cost, path;
 
-      throw new Error( 'State ' + from + ' does not exist' );
+    for( var i = 1, len = arguments.length; i < len; i++ ) {
+
+      from = arguments[ i - 1 ];
+      to = arguments[ i ];
+
+      calcs = new dijkstra( this.getId( from ), this.getId( to ), this.road );
+      cost = calcs.getCost();
+      path = calcs.getShortestPath();
+
+      // if we have multiple destinations and it's not the first remove the first
+      i > 1 && path.shift();
+
+      path = path.map( function( id) {
+
+        return this.idToState[ id ];
+      }.bind( this ));
+
+      totalCost += cost;
+      totalPath = totalPath.concat( path );
     }
-
-    if( this.states[ to ] === undefined ) {
-
-      throw new Error( 'State ' + from + ' does not exist' );
-    }
-
-    var calcs = new dijkstra( this.getId( from ), this.getId( to ), this.road ),
-        cost = calcs.getCost(),
-        path = calcs.getShortestPath();
-
-    path = path.map( function( id) {
-
-      return this.idToState[ id ];
-    }.bind( this ));
 
     return {
 
-      cost: cost,
-      path: path
+      cost: totalCost,
+      path: totalPath
     };
   },
 

@@ -24,6 +24,7 @@ var data = someDirections.getPath( 'alpha', 'omega' );
 
 console.log( data.cost ); // 2.7
 console.log( data.path ); // [ 'alpha', 'idle', 'omega' ]
+console.log( someDirections.getPath( 'alpha', 'rolled', 'omega' ) ); // [ 'alpha', 'idle', 'rolled', 'idle', 'omega' ]
 console.log( someDirections.fromTo( 'alpha', 'idle' ) ); // 1.2
 ```
 
