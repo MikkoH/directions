@@ -3,21 +3,46 @@ var directions = require( './..' );
 
 var someDirections = directions();
 
-someDirections.fromTo( 'alpha', 'idle', 1.2 );
-someDirections.fromTo( 'idle', 'rolled', 1 );
-someDirections.fromTo( 'rolled', 'idle', 1 );
-someDirections.fromTo( 'idle', 'omega', 1.5 );
+someDirections.fromTo('alpha', 'idle', 2);
+someDirections.fromTo('idle', 'rolled', 1);
+someDirections.fromTo('rolled', 'idle', 1);
+someDirections.fromTo('idle', 'omega', 1.5);
 
-tape( 'get path', function( t ) {
+tape('test getting back a duration', function(t) {
 
-  t.plan( 5 );
+  t.equal(someDirections.fromTo( 'alpha', 'idle' ), 2, 'individual duration was correct');
 
-  var data1 = someDirections.getPath( 'alpha', 'omega' );
-  var data2 = someDirections.getPath( 'alpha', 'rolled', 'omega' );
+  t.end();
+});
 
-  t.equal( JSON.stringify( data1.path ), JSON.stringify( [ 'alpha', 'idle', 'omega' ] ), 'path was correct' );
-  t.equal( JSON.stringify( data2.path ), JSON.stringify( [ 'alpha', 'idle', 'rolled', 'idle', 'omega' ] ), 'multi path was correct' );
-  t.equal( data1.cost, 2.7, 'path cost was correct' );
-  t.equal( data2.cost, 4.7, 'multi path cost was correct' );
-  t.equal( someDirections.fromTo( 'alpha', 'idle' ), 1.2, 'individual duration was correct' );
+tape('test single hops', function(t) {
+
+  var info = someDirections.getPath( 'alpha', 'omega');
+  
+  t.deepEqual(info.path, [ 'alpha', 'idle', 'omega' ], 'path was correct');
+  t.equal(info.cost, 3.5, 'path cost was correct');
+  
+  t.end();
+});
+
+tape('test multi hots', function(t) {
+
+  var info = someDirections.getPath( 'alpha', 'rolled', 'omega');
+
+  t.deepEqual(info.path, [ 'alpha', 'idle', 'rolled', 'idle', 'omega' ], 'multi path was correct');
+  t.equal(info.cost, 5.5, 'multi path cost was correct');
+
+  t.end();
+});
+
+tape('going from a path between', function(t) {
+
+  var info;
+
+  info = someDirections.getPath( { from: 'alpha', to: 'idle', location: 0.1 }, 'omega');
+
+  t.equal(info.cost, 3.4, 'single path cost was correct');
+  t.deepEqual(info.path, [ 'idle', 'omega' ], 'single path cost was correct');
+
+  t.end();
 });

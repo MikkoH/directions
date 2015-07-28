@@ -1,4 +1,4 @@
-var dijkstra = require( 'dijkstra-edsger' );
+var createPaths = require('create-paths');
 
 module.exports = directions;
 
@@ -13,6 +13,7 @@ function directions() {
   this.states = {};
   this.idToState = {};
   this.road = [];
+  this.traverse = null;
   this.durations = {};
 }
 
@@ -25,9 +26,11 @@ directions.prototype = {
       var durations = this.durations[ from ] || ( this.durations[ from ] = {} );
       durations[ to ] = duration;
 
-      this.road.push( [ this.getId( from ),
-                        this.getId( to ), 
+      this.road.push( [ from,
+                        to, 
                         duration ] );
+
+      this.traverse = createPaths(this.road);
     } else {
 
       duration = this.durations[ from ] && this.durations[ from ][ to ];
@@ -38,26 +41,27 @@ directions.prototype = {
 
   getPath: function() {
 
-    var totalCost = 0, 
-        totalPath = [], 
-        from, to, calcs, cost, path;
+    var totalCost = 0;
+    var totalPath = []; 
+    var from; 
+    var to;
+    var info;
+    var cost;
+    var path;
 
     for( var i = 1, len = arguments.length; i < len; i++ ) {
 
       from = arguments[ i - 1 ];
       to = arguments[ i ];
 
-      calcs = new dijkstra( this.getId( from ), this.getId( to ), this.road );
-      cost = calcs.getCost();
-      path = calcs.getShortestPath();
+      info = this.traverse(from, to);
+      cost = info.duration;
+      path = info.path;
 
       // if we have multiple destinations and it's not the first remove the first
-      i > 1 && path.shift();
-
-      path = path.map( function( id) {
-
-        return this.idToState[ id ];
-      }.bind( this ));
+      if(i > 1) {
+        path.shift();
+      }
 
       totalCost += cost;
       totalPath = totalPath.concat( path );
@@ -68,20 +72,5 @@ directions.prototype = {
       cost: totalCost,
       path: totalPath
     };
-  },
-
-  getId: function( state ) {
-
-    return this.states[ state ] || ( addState.call( this, state ) );
   }
 };
-
-function addState( state ) {
-
-  var id = this.stateCount++;
-
-  this.states[ state ] = id;
-  this.idToState[ id ] = state;
-
-  return id;
-}
